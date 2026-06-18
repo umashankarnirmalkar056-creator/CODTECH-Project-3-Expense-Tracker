@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceX - Expense Tracker Dashboard</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <h2>FinanceX Portal</h2>
+            
+            <div class="input-group">
+                <label>Username / Registered Email</label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-user"></i>
+                    <input type="email" id="email" placeholder="admin@gmail.com" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>Security Password</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="admin123" required>
+                </div>
+                <div class="forgot-pass">
+                    <a href="#" onclick="alert('Demo Pass: admin123')">Forgot password?</a>
+                </div>
+            </div>
+            
+            <button class="login-btn" onclick="handleLogin()">SECURE LOGIN</button>
+            
+            <button class="autofill-btn" onclick="autoFillDemoCredentials()">
+                <i class="fa-solid fa-bolt-lightning"></i> Auto Fill Demo Access
+            </button>
+            
+            <p id="loginError"></p>
+            
+            <div class="social-section">
+                <p>Or Sign Up Using</p>
+                <div class="social-icons">
+                    <a href="#" class="icon-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon-tw"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="icon-gp"><i class="fa-brands fa-google"></i></a>
+                </div>
+            </div>
+
+            <div class="demo-credentials-box">
+                <strong>💡 Dashboard Access Token:</strong>
+                <div>Email: <code>admin@gmail.com</code></div>
+                <div>Pass: <code>admin123</code></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainApp" style="display:none;">
+        <header>
+            <h1>📊 Finance<span>X</span> Expense Dashboard</h1>
+            <div class="header-btns">
+                <button class="pdf-btn" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                <button class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
+            </div>
+        </header>
+
+        <div id="budgetAlert">
+            <i class="fa-solid fa-triangle-exclamation animate-bounce"></i> 
+            <span>Warning: High Spending Alert! Your expenses have exceeded 80% of your budget.</span>
+        </div>
+
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-info"><h3 id="cardBalance" style="color: #3b82f6;">₹0.00</h3><p>Net Balance</p></div>
+                <div class="metric-icon blue-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-info"><h3 id="cardIncome" style="color: #10b981;">₹0.00</h3><p>Total Income</p></div>
+                <div class="metric-icon emerald-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-info"><h3 id="cardExpense" style="color: #f43f5e;">₹0.00</h3><p>Total Expenses</p></div>
+                <div class="metric-icon rose-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+            </div>
+        </section>
+
+        <div class="search-filter-box">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchKeyword" placeholder="Search statements by name..." onkeyup="processFilterSearch()">
+            </div>
+            <div class="date-filter-group">
+                <label>From:</label><input type="date" id="startDate" onchange="processFilterSearch()">
+                <label>To:</label><input type="date" id="endDate" onchange="onEndDateChange()">
+            </div>
+            <div class="filter-dropdown">
+                <select id="filterType" onchange="processFilterSearch()">
+                    <option value="All">All Types</option>
+                    <option value="Income">Income Only</option>
+                    <option value="Expense">Expenses Only</option>
+                </select>
+            </div>
+            <div class="filter-dropdown">
+                <select id="filterCategory" onchange="processFilterSearch()">
+                    <option value="All">All Categories</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Food">Food</option>
+                    <option value="Rent">Rent</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Bills">Bills & Utilities</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dashboard-layout">
+            <div class="transaction-form-panel">
+                <h3><i class="fa-solid fa-circle-plus"></i> Log Transaction</h3>
+                <div class="form-group">
+                    <label>Transaction Title</label>
+                    <input type="text" id="tTitle" placeholder="e.g., Freelance Project, Groceries">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="tType" onchange="autoAdjustCategoryOptions()">
+                        <option value="Expense">Expense (-) </option>
+                        <option value="Income">Income (+)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Category</label><select id="tCategory"></select></div>
+                <div class="form-group"><label>Amount (₹)</label><input type="number" id="tAmount" placeholder="Enter amount"></div>
+                <div class="form-group"><label>Transaction Date (Optional)</label><input type="date" id="tDate"></div>
+                <button class="submit-btn" onclick="addNewTransactionRecord()">Log Transaction</button>
+            </div>
+
+            <div class="ledger-table-panel">
+                <table>
+                    <thead>
+                        <tr><th>Date</th><th>Description</th><th>Type</th><th>Category</th><th>Amount</th><th style="text-align: center;">Action</th></tr>
+                    </thead>
+                    <tbody id="ledgerTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
